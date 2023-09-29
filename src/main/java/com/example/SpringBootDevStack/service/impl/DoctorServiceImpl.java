@@ -2,6 +2,7 @@ package com.example.SpringBootDevStack.service.impl;
 
 import com.example.SpringBootDevStack.dto.request.RequestDoctorDto;
 import com.example.SpringBootDevStack.dto.response.ResponseDoctorDto;
+import com.example.SpringBootDevStack.dto.response.paginated.PaginatedDoctorResponseDto;
 import com.example.SpringBootDevStack.entity.DoctorEntity;
 import com.example.SpringBootDevStack.repo.DoctorRepo;
 import com.example.SpringBootDevStack.service.DoctorService;
@@ -82,13 +83,13 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<ResponseDoctorDto> getAllDoctors(String searchText, int page, int size) {
+    public PaginatedDoctorResponseDto getAllDoctors(String searchText, int page, int size) {
         searchText = "%"+searchText+"%";
-        doctorRepo.searchDoctors(searchText, PageRequest.of(page,size));
+        List<DoctorEntity> doctorEntities = doctorRepo.searchDoctors(searchText, PageRequest.of(page, size));
+        long count = doctorRepo.countDoctors(searchText);
 
-        List<DoctorEntity> all = doctorRepo.findAll();
         List<ResponseDoctorDto> list = new ArrayList<>();
-        for (DoctorEntity entity: all) {
+        for (DoctorEntity entity: doctorEntities) {
             list.add(new ResponseDoctorDto(
                     entity.getId(),
                     entity.getName(),
@@ -97,7 +98,9 @@ public class DoctorServiceImpl implements DoctorService {
                     entity.getSalary()
             ));
         }
-        return list;
+        return new PaginatedDoctorResponseDto(
+                count, list
+        );
     }
 
     @Override

@@ -16,4 +16,7 @@ public interface DoctorRepo extends JpaRepository<DoctorEntity, Long>{
 
     @Query(value = "SELECT * FROM doctor WHERE name LIKE ?1 OR address LIKE ?1", nativeQuery = true)
     List<DoctorEntity> searchDoctors(String searchText, PageRequest pageable);
+
+    @Query(value = "SELECT COUNT(*) FROM doctor WHERE name LIKE ?1 OR address LIKE ?1", nativeQuery = true)
+    long countDoctors(String searchText);
 }

@@ -43,17 +43,24 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}")
-    public String findDoctor(@PathVariable String id){
+    public ResponseEntity<StandardResponse> findDoctor(@PathVariable String id){
         ResponseDoctorDto doctor = doctorService.getDoctor(Long.parseLong(id));
-        return "Find Doctor   ->   "+doctor.toString();
+        return new ResponseEntity<>(
+                new StandardResponse(200,"Doctor was found!",doctorService.getDoctor(Long.parseLong(id))),
+                HttpStatus.OK
+        );
 
         //http://localhost:8000/api/v1/doctors/D0001            -> GET
     }
 
     @PutMapping(params = "id")
-    public String updateDoctor(@RequestParam String id, @RequestBody RequestDoctorDto doctorDto){
+    public ResponseEntity<StandardResponse> updateDoctor(@RequestParam String id, @RequestBody RequestDoctorDto doctorDto){
         doctorService.updateDoctor(Long.parseLong(id),doctorDto);
-        return "Update Doctor   ->  "+doctorDto.toString();
+
+        return new ResponseEntity<>(
+                new StandardResponse(201,"Updated Doctor Data!", doctorDto.toString()),
+                HttpStatus.OK
+        );
 
         //http://localhost:8000/api/v1/doctors?id=D0001            -> PUT
         //Params  (QueryParams)
@@ -70,21 +77,27 @@ public class DoctorController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteDoctor(@PathVariable String id){
+    public ResponseEntity<StandardResponse> deleteDoctor(@PathVariable String id){
         doctorService.deleteDoctor(Long.parseLong(id));
-        return "Delete Doctor    ->  "+id;
+        return new ResponseEntity<>(
+                new StandardResponse(204,"Deleted Doctor Data!", id),
+                HttpStatus.NO_CONTENT
+        );
 
         //http://localhost:8000/api/v1/doctors/D0001            -> DELETE
     }
 
     @GetMapping(path = "/list" , params = {"searchText", "page", "size"})
-    public String findAllDoctors(
+    public ResponseEntity<StandardResponse> findAllDoctors(
             @RequestParam String searchText,
             @RequestParam int page,
             @RequestParam int size
     ){
-        List<ResponseDoctorDto> allDoctors = doctorService.getAllDoctors(searchText, page, size);
-        return "All Doctors   -> \n"+allDoctors.toString();
+        return new ResponseEntity<>(
+                new StandardResponse(200,"Doctor Data List! ", doctorService.getAllDoctors(searchText, page, size)),
+                HttpStatus.OK
+        );
+
         //http://localhost:8000/api/v1/doctors/list?searchText=ruvini&page=0&size=10
     }
 
