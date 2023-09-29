@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 @EnableJpaRepositories
 public interface DoctorRepo extends JpaRepository<DoctorEntity, Long>{
-    void update(Long id,DoctorEntity doctorEntity);
 }

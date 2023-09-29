@@ -59,10 +59,10 @@ public class DoctorServiceImpl implements DoctorService {
                 id,
                 doctorDto.getName(),
                 doctorDto.getAddress(),
-                doctorDto.getAddress(),
+                doctorDto.getContact(),
                 doctorDto.getSalary()
         );
-        doctorRepo.update(id, doctorEntity);
+        doctorRepo.save(doctorEntity);
     }
 
     @Override
