@@ -8,6 +8,7 @@ import com.example.SpringBootDevStack.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,21 +37,47 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public ResponseDoctorDto getDoctor(long id) {
-        return null;
+        DoctorEntity doctorEntity = doctorRepo.getReferenceById(id);
+        ResponseDoctorDto responseDoctorDto = new ResponseDoctorDto(
+                doctorEntity.getId(),
+                doctorEntity.getName(),
+                doctorEntity.getAddress(),
+                doctorEntity.getContact(),
+                doctorEntity.getSalary()
+        );
+        return responseDoctorDto;
     }
 
     @Override
     public void deleteDoctor(long id) {
-
+        doctorRepo.deleteById(id);
     }
 
     @Override
     public void updateDoctor(long id, RequestDoctorDto doctorDto) {
-
+        DoctorEntity doctorEntity = new DoctorEntity(
+                id,
+                doctorDto.getName(),
+                doctorDto.getAddress(),
+                doctorDto.getAddress(),
+                doctorDto.getSalary()
+        );
+        doctorRepo.update(id, doctorEntity);
     }
 
     @Override
     public List<ResponseDoctorDto> getAllDoctors(String searchText, int page, int size) {
-        return null;
+        List<DoctorEntity> all = doctorRepo.findAll();
+        List<ResponseDoctorDto> list = new ArrayList<>();
+        for (DoctorEntity entity: all) {
+            list.add(new ResponseDoctorDto(
+                    entity.getId(),
+                    entity.getName(),
+                    entity.getAddress(),
+                    entity.getContact(),
+                    entity.getSalary()
+            ));
+        }
+        return list;
     }
 }
