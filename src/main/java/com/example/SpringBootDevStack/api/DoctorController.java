@@ -3,7 +3,10 @@ package com.example.SpringBootDevStack.api;
 import com.example.SpringBootDevStack.dto.request.RequestDoctorDto;
 import com.example.SpringBootDevStack.dto.response.ResponseDoctorDto;
 import com.example.SpringBootDevStack.service.DoctorService;
+import com.example.SpringBootDevStack.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +24,12 @@ public class DoctorController {
 
 
     @PostMapping
-    public String createDoctor(@RequestBody RequestDoctorDto doctorDto){
+    public ResponseEntity<StandardResponse> createDoctor(@RequestBody RequestDoctorDto doctorDto){
         doctorService.createDoctor(doctorDto);
-        return doctorDto.toString();
+        return new ResponseEntity<>(
+                new StandardResponse(201,"Doctor was saved!",doctorDto.toString()),
+                HttpStatus.CREATED
+        );
 
         //http://localhost:8000/api/v1/doctors -> POST
 

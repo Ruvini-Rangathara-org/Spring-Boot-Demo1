@@ -11,5 +11,7 @@ public interface DoctorService {
     void deleteDoctor(long id);
     void updateDoctor(long id, RequestDoctorDto doctorDto);
     List<ResponseDoctorDto> getAllDoctors(String searchText, int page, int size);
+    List<ResponseDoctorDto> getAllByName(String name);
+
 
 }
