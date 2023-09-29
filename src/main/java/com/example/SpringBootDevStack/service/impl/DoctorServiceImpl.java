@@ -4,6 +4,7 @@ import com.example.SpringBootDevStack.dto.request.RequestDoctorDto;
 import com.example.SpringBootDevStack.dto.response.ResponseDoctorDto;
 import com.example.SpringBootDevStack.dto.response.paginated.PaginatedDoctorResponseDto;
 import com.example.SpringBootDevStack.entity.DoctorEntity;
+import com.example.SpringBootDevStack.exception.EntryNotFoundException;
 import com.example.SpringBootDevStack.repo.DoctorRepo;
 import com.example.SpringBootDevStack.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class DoctorServiceImpl implements DoctorService {
     public ResponseDoctorDto getDoctor(long id) {
         Optional<DoctorEntity> doctorById = doctorRepo.findById(id);
         if(doctorById.isEmpty()){
-            throw new RuntimeException("Doctor Not Found!");
+            throw new EntryNotFoundException("Doctor Not Found!");
         }
 
         DoctorEntity doctorEntity = doctorById.get();
@@ -60,7 +61,7 @@ public class DoctorServiceImpl implements DoctorService {
     public void deleteDoctor(long id) {
         Optional<DoctorEntity> byId = doctorRepo.findById(id);
         if(byId.isEmpty()){
-            throw new RuntimeException("Doctor Not Found!");
+            throw new EntryNotFoundException("Doctor Not Found!");
         }
         doctorRepo.deleteById(id);
     }
@@ -69,7 +70,7 @@ public class DoctorServiceImpl implements DoctorService {
     public void updateDoctor(long id, RequestDoctorDto doctorDto) {
         Optional<DoctorEntity> byId = doctorRepo.findById(id);
         if(byId.isEmpty()){
-            throw new RuntimeException("Doctor Not Found!");
+            throw new EntryNotFoundException("Doctor Not Found!");
         }
 
         DoctorEntity doctorEntity = new DoctorEntity(
