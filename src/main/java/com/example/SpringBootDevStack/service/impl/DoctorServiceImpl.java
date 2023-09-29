@@ -7,6 +7,7 @@ import com.example.SpringBootDevStack.entity.DoctorEntity;
 import com.example.SpringBootDevStack.exception.EntryNotFoundException;
 import com.example.SpringBootDevStack.repo.DoctorRepo;
 import com.example.SpringBootDevStack.service.DoctorService;
+import com.example.SpringBootDevStack.util.mapper.DoctorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,13 @@ import java.util.UUID;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
+    private final DoctorMapper doctorMapper;
 
     private final DoctorRepo doctorRepo;
 
     @Autowired
-    public DoctorServiceImpl(DoctorRepo doctorRepo) {
+    public DoctorServiceImpl(DoctorMapper doctorMapper, DoctorRepo doctorRepo) {
+        this.doctorMapper = doctorMapper;
         this.doctorRepo = doctorRepo;
     }
 
@@ -45,16 +48,7 @@ public class DoctorServiceImpl implements DoctorService {
         if(doctorById.isEmpty()){
             throw new EntryNotFoundException("Doctor Not Found!");
         }
-
-        DoctorEntity doctorEntity = doctorById.get();
-        ResponseDoctorDto responseDoctorDto = new ResponseDoctorDto(
-                doctorEntity.getId(),
-                doctorEntity.getName(),
-                doctorEntity.getAddress(),
-                doctorEntity.getContact(),
-                doctorEntity.getSalary()
-        );
-        return responseDoctorDto;
+        return doctorMapper.toResponseDoctorDto(doctorById.get());
     }
 
     @Override
@@ -91,13 +85,7 @@ public class DoctorServiceImpl implements DoctorService {
 
         List<ResponseDoctorDto> list = new ArrayList<>();
         for (DoctorEntity entity: doctorEntities) {
-            list.add(new ResponseDoctorDto(
-                    entity.getId(),
-                    entity.getName(),
-                    entity.getAddress(),
-                    entity.getContact(),
-                    entity.getSalary()
-            ));
+            list.add(doctorMapper.toResponseDoctorDto(entity));
         }
         return new PaginatedDoctorResponseDto(
                 count, list
